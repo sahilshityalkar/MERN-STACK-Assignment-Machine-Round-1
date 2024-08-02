@@ -1,26 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
+import { ClerkProvider } from '@clerk/clerk-react';
+import { Provider } from 'react-redux';
+import { store } from './app/store';
 import App from './App';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-
-// Import your publishable key
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
-  throw new Error("Missing Publishable Key")
+  throw new Error("Key Was Not Found");
 }
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-      <SignedIn>
+      <Provider store={store}>
         <App />
-      </SignedIn>
-      <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
+      </Provider>
     </ClerkProvider>
   </React.StrictMode>
 );
