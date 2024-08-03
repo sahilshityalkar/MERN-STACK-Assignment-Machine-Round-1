@@ -35,7 +35,12 @@ mongoose.connect(process.env.MONGO_URI, {
 // Routes
 app.use('/api/posts', postsRoutes);
 app.use('/api/users', usersRoutes);
-app.use('/api/webhooks', webhookRoutes); // Correct path and import
+app.use('/api/webhooks', webhookRoutes); 
+
+// Middleware to handle unknown routes
+app.use((req, res, next) => {
+  res.status(404).json({ message: 'Route not found' });
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

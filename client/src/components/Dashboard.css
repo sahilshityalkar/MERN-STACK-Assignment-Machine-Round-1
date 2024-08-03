@@ -1,0 +1,22 @@
+.dashboard {
+    display: flex;
+  }
+  
+  .dashboard__sidebar {
+    width: 25%;
+    padding: 10px;
+    background-color: #f4f4f4;
+  }
+  
+  .dashboard__main {
+    flex: 1;
+    padding: 10px;
+  }
+  
+  .post {
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #fff;
+  }
+  
