@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
+import { registerUser, updateUserProfile } from '../controllers/userController.js';
+import { clerkAuthMiddleware } from '../middleware/authMiddleware.js';
 
-// Define your routes here
-router.get('/', (req, res) => {
-  res.send('Users route');
-});
+router.post('/register', registerUser);
+router.put('/:id', clerkAuthMiddleware, updateUserProfile);
 
-module.exports = router;
+export default router;
