@@ -1,8 +1,10 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const webhookController = require('../controllers/webhookController');
 
-// Route to handle Clerk webhooks
-router.post('/webhooks/clerk', webhookController.handleWebhook);
+// Define your webhook routes here
+router.post('/webhook-endpoint', (req, res) => {
+  // Handle webhook logic
+  res.status(200).send('Webhook received');
+});
 
-module.exports = router;
+export default router; // Export as default

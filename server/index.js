@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import postsRoutes from './routes/posts.js';
+import usersRoutes from './routes/users.js';
+import webhookRoutes from './routes/webhookRoutes.js'; // Ensure this is the correct path
 
 dotenv.config();
 
@@ -13,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware to parse JSON
 app.use(express.json());
 
+// Resolve __dirname with ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -26,11 +29,13 @@ mongoose.connect(process.env.MONGO_URI, {
 }).then(() => {
   console.log('Connected to MongoDB');
 }).catch((error) => {
-  console.log('Error connecting to MongoDB:', error.message);
+  console.error('Error connecting to MongoDB:', error.message);
 });
 
 // Routes
 app.use('/api/posts', postsRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/webhooks', webhookRoutes); // Correct path and import
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
