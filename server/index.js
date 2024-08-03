@@ -1,22 +1,37 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import connectDB from './config/db.js';
-import userRoutes from './routes/users.js';
-import postRoutes from './routes/posts.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import postsRoutes from './routes/posts.js';
 
 dotenv.config();
 
 const app = express();
-
-console.log('MongoDB URI:', process.env.MONGO_URI);
-
-connectDB();
-
-app.use(express.json());
-app.use('/api/users', userRoutes);
-app.use('/api/posts', postRoutes);
-
 const PORT = process.env.PORT || 5000;
+
+// Middleware to parse JSON
+app.use(express.json());
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static files from the "uploads" directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch((error) => {
+  console.log('Error connecting to MongoDB:', error.message);
+});
+
+// Routes
+app.use('/api/posts', postsRoutes);
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

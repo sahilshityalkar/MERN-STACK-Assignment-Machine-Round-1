@@ -1,9 +1,9 @@
 import express from 'express';
-const router = express.Router();
-import { registerUser, updateUserProfile } from '../controllers/userController.js';
-import { clerkAuthMiddleware } from '../middleware/authMiddleware.js';
+import { saveUserData } from '../controllers/userController.js'; // Ensure the file and export match
 
-router.post('/register', registerUser);
-router.put('/:id', clerkAuthMiddleware, updateUserProfile);
+const router = express.Router();
+
+// Route to save or update user data
+router.post('/saveUserData', saveUserData);
 
 export default router;

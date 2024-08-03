@@ -1,56 +1,23 @@
-import asyncHandler from 'express-async-handler';
-import User from '../models/User.js';
+export const saveUserData = async (req, res) => {
+  try {
+    const { username, email } = req.body;
 
-// @desc    Register a new user
-// @route   POST /api/users/register
-// @access  Public
-const registerUser = asyncHandler(async (req, res) => {
-  const { userId, email } = req.body;
+    // Validate data
+    if (!username || !email) {
+      return res.status(400).json({ message: 'Username and email are required' });
+    }
 
-  const userExists = await User.findOne({ userId });
+    // Save or update user data in MongoDB
+    // Assuming you have a User model and it's imported correctly
 
-  if (userExists) {
-    res.status(400);
-    throw new Error('User already exists');
+    const user = await User.findOneAndUpdate(
+      { email: email }, // Update by email or use another unique identifier
+      { username: username, email: email },
+      { new: true, upsert: true } // Create a new document if it doesn't exist
+    );
+
+    res.status(200).json({ message: 'User data saved/updated successfully', user });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
   }
-
-  const user = await User.create({
-    userId,
-    email,
-  });
-
-  if (user) {
-    res.status(201).json({
-      _id: user._id,
-      userId: user.userId,
-      email: user.email,
-    });
-  } else {
-    res.status(400);
-    throw new Error('Invalid user data');
-  }
-});
-
-// @desc    Update user profile
-// @route   PUT /api/users/:id
-// @access  Private
-const updateUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
-
-  if (user) {
-    user.email = req.body.email || user.email;
-
-    const updatedUser = await user.save();
-
-    res.json({
-      _id: updatedUser._id,
-      userId: updatedUser.userId,
-      email: updatedUser.email,
-    });
-  } else {
-    res.status(404);
-    throw new Error('User not found');
-  }
-});
-
-export { registerUser, updateUserProfile };
+};
