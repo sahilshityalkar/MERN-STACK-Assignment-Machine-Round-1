@@ -1,18 +1,18 @@
-import User from '../models/User.js'; // Correct ES module import
+import User from '../models/User.js';
 
 export const saveUserData = async (req, res) => {
   try {
-    const { username, email } = req.body;
+    const { userId, email } = req.body;
 
     // Validate input data
-    if (!username || !email) {
-      return res.status(400).json({ message: 'Username and email are required' });
+    if (!userId || !email) {
+      return res.status(400).json({ message: 'UserId and email are required' });
     }
 
     // Find and update or create a new user document
     const user = await User.findOneAndUpdate(
       { email: email },
-      { username: username, email: email },
+      { userId: userId, email: email },
       { new: true, upsert: true } // Create a new document if it doesn't exist
     );
 
