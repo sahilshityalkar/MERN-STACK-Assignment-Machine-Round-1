@@ -4,8 +4,9 @@ import { useDispatch } from 'react-redux';
 import { setUser, saveUserData } from './features/user/userSlice'; // Correct path for userSlice.js
 import './index.css'; // Importing index.css
 import './App.css';   // Importing App.css
+import PostForm from './components/PostForm'; // Import the PostForm component
 
-const Header = () => {
+const Header = ({ onMyPostsClick }) => {
   const { user } = useClerk();
   const dispatch = useDispatch();
   const [username, setUsername] = useState(user?.username || ''); // local state to store username
@@ -34,7 +35,7 @@ const Header = () => {
     <header className="header">
       <div className="header-content">
         <div className="left-section">
-          <button className="my-posts-btn">My Posts</button>
+          <button className="my-posts-btn" onClick={onMyPostsClick}>My Posts</button>
           <span className="welcome-message">Welcome, {username || 'User'}</span>
         </div>
         <div className="right-section">
@@ -49,6 +50,11 @@ const Header = () => {
 
 const App = () => {
   const { user } = useClerk();
+  const [showPostForm, setShowPostForm] = useState(false);
+
+  const handleMyPostsClick = () => {
+    setShowPostForm(!showPostForm);
+  };
 
   if (!user) {
     return <RedirectToSignIn />;
@@ -56,11 +62,12 @@ const App = () => {
 
   return (
     <div>
-      <Header />
+      <Header onMyPostsClick={handleMyPostsClick} />
       <main>
         <ClerkLoading>
           <div>Loading...</div>
         </ClerkLoading>
+        {showPostForm && <PostForm />} {/* Conditionally render PostForm */}
       </main>
     </div>
   );

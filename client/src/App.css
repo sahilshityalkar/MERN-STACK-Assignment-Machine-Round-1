@@ -1,3 +1,5 @@
+/* App.css */
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -43,3 +45,64 @@
   display: flex;
   align-items: center;
 }
+
+.post-form {
+  width: 300px; /* Adjust width as needed */
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
+.post-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.post-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.post-form-input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  resize: none; /* Prevent resizing */
+}
+
+.post-form-button {
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.post-form-button:disabled {
+  background-color: #b3d7ff;
+  cursor: not-allowed;
+}
+
+.post-form-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+.success {
+  color: green;
+  text-align: center;
+}
+
