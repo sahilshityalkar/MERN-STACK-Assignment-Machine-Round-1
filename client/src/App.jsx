@@ -6,7 +6,7 @@ import './index.css'; // Importing index.css
 import './App.css';   // Importing App.css
 import PostForm from './components/PostForm'; // Import the PostForm component
 
-const Header = ({ onMyPostsClick }) => {
+const Header = ({ onMyPostsClick, buttonText }) => {
   const { user } = useClerk();
   const dispatch = useDispatch();
   const [username, setUsername] = useState(user?.username || ''); // local state to store username
@@ -35,7 +35,7 @@ const Header = ({ onMyPostsClick }) => {
     <header className="header">
       <div className="header-content">
         <div className="left-section">
-          <button className="my-posts-btn" onClick={onMyPostsClick}>My Posts</button>
+          <button className="my-posts-btn" onClick={onMyPostsClick}>{buttonText}</button>
           <span className="welcome-message">Welcome, {username || 'User'}</span>
         </div>
         <div className="right-section">
@@ -56,18 +56,20 @@ const App = () => {
     setShowPostForm(!showPostForm);
   };
 
+  const buttonText = showPostForm ? 'My Dashboard' : 'My Posts';
+
   if (!user) {
     return <RedirectToSignIn />;
   }
 
   return (
     <div>
-      <Header onMyPostsClick={handleMyPostsClick} />
+      <Header onMyPostsClick={handleMyPostsClick} buttonText={buttonText} />
       <main>
         <ClerkLoading>
           <div>Loading...</div>
         </ClerkLoading>
-        {showPostForm && <PostForm />} {/* Conditionally render PostForm */}
+        {showPostForm ? <PostForm /> : <div className="dashboard-placeholder">Dashboard Content</div>}
       </main>
     </div>
   );
