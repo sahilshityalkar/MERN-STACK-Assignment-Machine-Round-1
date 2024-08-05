@@ -1,0 +1,25 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #f8f9fa;
+}
+
+.header .left {
+  display: flex;
+  align-items: center;
+}
+
+.header .right {
+  display: flex;
+  align-items: center;
+}
+
+.header button {
+  margin-left: 10px;
+}
+
+/* Main content styles */
+.app {
+  padding: 20px;
+}

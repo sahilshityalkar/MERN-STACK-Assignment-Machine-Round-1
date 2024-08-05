@@ -3,21 +3,25 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cors from 'cors'; 
 import postsRoutes from './routes/posts.js';
 import usersRoutes from './routes/users.js';
-import webhookRoutes from './routes/webhookRoutes.js'; // Ensure this is the correct path
+import webhookRoutes from './routes/webhookRoutes.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware to parse JSON
 app.use(express.json());
 
-// Resolve __dirname with ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
 
 // Serve static files from the "uploads" directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

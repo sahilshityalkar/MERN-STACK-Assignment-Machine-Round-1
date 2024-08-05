@@ -1,43 +1,48 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchUser, updateUser } from './userAPI';
+import axios from 'axios';
 
-const initialState = {
-  user: null,
-  status: 'idle',
-  error: null,
-};
-
-export const loadUser = createAsyncThunk('user/loadUser', async () => {
-  const response = await fetchUser();
-  return response.data;
-});
-
-export const updateUserProfile = createAsyncThunk('user/updateUserProfile', async (user) => {
-  const response = await updateUser(user);
-  return response.data;
-});
+// Async thunk to save user data
+export const saveUserData = createAsyncThunk(
+  'user/saveUserData',
+  async (userData) => {
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/saveUserData`, userData);
+    return response.data;
+  }
+);
 
 const userSlice = createSlice({
   name: 'user',
-  initialState,
-  reducers: {},
+  initialState: {
+    userId: '',
+    email: '',
+    username: '',
+    status: 'idle',
+    error: null
+  },
+  reducers: {
+    setUser(state, action) {
+      const { userId, email, username } = action.payload;
+      state.userId = userId;
+      state.email = email;
+      state.username = username;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(loadUser.pending, (state) => {
+      .addCase(saveUserData.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(loadUser.fulfilled, (state, action) => {
+      .addCase(saveUserData.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.user = action.payload;
+        state.userId = action.payload.userId;
+        state.email = action.payload.email;
       })
-      .addCase(loadUser.rejected, (state, action) => {
+      .addCase(saveUserData.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
-      })
-      .addCase(updateUserProfile.fulfilled, (state, action) => {
-        state.user = action.payload;
       });
-  },
+  }
 });
 
+export const { setUser } = userSlice.actions;
 export default userSlice.reducer;

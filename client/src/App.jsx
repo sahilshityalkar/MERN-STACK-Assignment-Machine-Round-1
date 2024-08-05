@@ -1,27 +1,56 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { SignedIn, SignedOut, UserButton, RedirectToSignIn, UserProfile, useUser } from '@clerk/clerk-react';
-import Dashboard from './components/Dashboard';
-import Header from './components/Header';
+import React, { useEffect } from 'react';
+import { useClerk, SignedIn, ClerkLoading, UserButton, RedirectToSignIn } from '@clerk/clerk-react';
+import { useDispatch } from 'react-redux';
+import { setUser, saveUserData } from './features/user/userSlice'; // Correct path for userSlice.js
 
-function App() {
-  const { user, isLoaded } = useUser();
-  const userName = isLoaded && user ? user.username || 'User' : 'Loading...';
+const Header = () => {
+  const { user } = useClerk();
+  const dispatch = useDispatch();
+  const userId = user?.id;
+  const email = user?.primaryEmailAddress?.emailAddress;
+  const username = user?.username || '';
+
+  useEffect(() => {
+    if (user) {
+      const userData = { userId, email };
+      dispatch(setUser({ userId, email, username }));
+      dispatch(saveUserData(userData)); // Call to save user data to the backend
+    }
+  }, [user, dispatch, userId, email, username]);
 
   return (
-    <Router>
-      <SignedIn>
-        <Header userName={userName} />
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/profile" element={<UserProfile />} />
-        </Routes>
-      </SignedIn>
-      <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
-    </Router>
+    <header>
+      <div>
+        <SignedIn>
+          <span>Welcome, {username || 'User'}</span>
+        </SignedIn>
+      </div>
+      <div>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </div>
+    </header>
   );
-}
+};
+
+const App = () => {
+  const { user } = useClerk();
+  
+  if (!user) {
+    return <RedirectToSignIn />;
+  }
+
+  return (
+    <div>
+      <Header />
+      <main>
+        <ClerkLoading>
+          <div>Loading...</div>
+        </ClerkLoading>
+      </main>
+    </div>
+  );
+};
 
 export default App;
