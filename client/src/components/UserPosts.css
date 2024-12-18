@@ -1,0 +1,17 @@
+/* src/components/UserPosts.css */
+.user-posts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .post-item {
+    width: calc(33.333% - 10px); /* Adjust width for responsive layout */
+  }
+  
+  .post-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
